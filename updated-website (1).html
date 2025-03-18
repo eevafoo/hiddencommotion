@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eeva Foo | Personal Site</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            color: #2E2450;
+            line-height: 1.6;
+            background-color: white;
+        }
+        
+        /* Left side navigation */
+        .sidebar {
+            width: 200px;
+            background-color: white;
+            padding: 40px 20px;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid #eee;
+            z-index: 100;
+        }
+        
+        .site-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            color: #2E2450;
+            cursor: pointer;
+        }
+        
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .nav-links li {
+            margin-bottom: 15px;
+        }
+        
+        .nav-links a {
+            color: #2E2450;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: opacity 0.2s;
+            opacity: 0.8;
+        }
+        
+        .nav-links a:hover {
+            opacity: 1;
+        }
+        
+        .nav-links a.active {
+            opacity: 1;
+            font-weight: 500;
+        }
+        
+        /* Main content */
+        .content {
+            margin-left: 200px;
+            padding: 40px 20px;
+            width: calc(100% - 200px);
+        }
+        
+        section {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 60px 0;
+            display: none;
+        }
+        
+        section.active {
+            display: block;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 20px;
+        }
+        
+        .writing-item, .project-item {
+            margin-bottom: 40px;
+        }
+        
+        .writing-item h2, .project-item h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .writing-date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .project-links {
+            margin-top: 10px;
+        }
+        
+        .project-links a {
+            color: #2E2450;
+            margin-right: 15px;
+            text-decoration: none;
+        }
+        
+        .project-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .dropdown-menu {
+            list-style: none;
+            padding-left: 15px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .dropdown-menu.active {
+            display: block;
+        }
+        
+        .dropdown-menu li {
+            margin-bottom: 8px;
+        }
+        
+        .dropdown-menu a {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        .dropdown-toggle::after {
+            content: ' ▾';
+            font-size: 10px;
+            vertical-align: middle;
+        }
+        
+        .read-more {
+            display: inline-block;
+            color: #2E2450;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        
+        .read-more:hover {
+            opacity: 1;
+        }
+        
+        .things-category {
+            margin-bottom: 40px;
+        }
+        
+        .things-category h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #2E2450;
+        }
+        
+        .things-list {
+            list-style: none;
+        }
+        
+        .things-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .things-list li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: #2E2450;
+            opacity: 0.7;
+        }
+        
+        .loading-message {
+            color: #888;
+            font-style: italic;
+            padding: 20px 0;
+        }
+        
+        /* Hamburger menu for mobile */
+        .hamburger-menu {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 200;
+            cursor: pointer;
+        }
+        
+        .hamburger-icon {
+            width: 30px;
+            height: 20px;
+            position: relative;
+        }
+        
+        .hamburger-icon span {
+            display: block;
+            position: absolute;
+            height: 3px;
+            width: 100%;
+            background: #2E2450;
+            border-radius: 3px;
+            opacity: 1;
+            left: 0;
+            transform: rotate(0deg);
+            transition: .25s ease-in-out;
+        }
+        
+        .hamburger-icon span:nth-child(1) {
+            top: 0px;
+        }
+        
+        .hamburger-icon span:nth-child(2) {
+            top: 8px;
+        }
+        
+        .hamburger-icon span:nth-child(3) {
+            top: 16px;
+        }
+        
+        .hamburger-icon.open span:nth-child(1) {
+            top: 8px;
+            transform: rotate(135deg);
+        }
+        
+        .hamburger-icon.open span:nth-child(2) {
+            opacity: 0;
+            left: -60px;
+        }
+        
+        .hamburger-icon.open span:nth-child(3) {
+            top: 8px;
+            transform: rotate(-135deg);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                width: 200px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+                box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            }
+            
+            .content {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+            
+            .hamburger-menu {
+                display: block;
+            }
+            
+            .site-title {
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hamburger Menu for Mobile -->
+    <div class="hamburger-menu">
+        <div class="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    
+    <!-- Left sidebar navigation -->
+    <nav class="sidebar">
+        <div class="site-title" onclick="showSection('about')">eeva foo</div>
+        <ul class="nav-links">
+            <li><a href="#about" class="active" onclick="showSection('about')">about</a></li>
+            <li>
+                <a href="#writing" onclick="showSection('writing')" class="dropdown-toggle">writing</a>
+                <ul class="dropdown-menu" id="writing-dropdown">
+                    <!-- Only keeping the future of technology post -->
+                    <li><a href="https://hiddencommotion.substack.com/p/the-future-of-technology" target="_blank">the future of technology</a></li>
+                    <!-- You can add more links as you publish new posts -->
+                </ul>
+            </li>
+            <li>
+                <a href="#projects" onclick="showSection('projects')" class="dropdown-toggle">projects</a>
+                <ul class="dropdown-menu">
+                    <li><a href="#" onclick="event.preventDefault();">project one</a></li>
+                    <li><a href="#" onclick="event.preventDefault();">project two</a></li>
+                </ul>
+            </li>
+            <li><a href="#things" onclick="showSection('things')">things i like</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Main content area -->
+    <main class="content">
+        <!-- About section -->
+        <section id="about" class="active">
+            <h1>about me</h1>
+            <p>
+                Hello, I'm eeva foo. This is a simple introduction about who I am and what I do.
+                I'm passionate about sharing my work and ideas through this personal site.
+            </p>
+            <p>
+                This minimal design focuses on content and readability. Feel free to customize it
+                with your personal information and style preferences.
+            </p>
+        </section>
+        
+        <!-- Writing section -->
+        <section id="writing">
+            <h1>my writing</h1>
+            <div id="writing-items-container">
+                <!-- Only keeping the future of technology post -->
+                <div class="writing-item">
+                    <h2>the future of technology</h2>
+                    <div class="writing-date">Mar 1, 2025</div>
+                    <p>
+                        Technology continues to evolve at a rapid pace, reshaping how we live, work, and interact. 
+                        In this exploration, I consider which emerging technologies might have the most profound impact on society in the coming decade.
+                    </p>
+                    <a href="https://hiddencommotion.substack.com/p/the-future-of-technology" class="read-more" target="_blank">read on substack →</a>
+                </div>
+                
+                <!-- You can add more articles as you publish them -->
+            </div>
+        </section>
+        
+        <!-- Projects section -->
+        <section id="projects">
+            <h1>my projects</h1>
+            
+            <div class="project-item">
+                <h2>project one</h2>
+                <p>
+                    A brief description of your first project. What technologies did you use?
+                    What problems did it solve? Keep it concise but informative.
+                </p>
+                <div class="project-links">
+                    <a href="#">view project</a>
+                    <a href="#">source code</a>
+                </div>
+            </div>
+            
+            <div class="project-item">
+                <h2>project two</h2>
+                <p>
+                    A brief description of your second project. What technologies did you use?
+                    What problems did it solve? Keep it concise but informative.
+                </p>
+                <div class="project-links">
+                    <a href="#">view project</a>
+                    <a href="#">source code</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Things I Like section -->
+        <section id="things">
+            <h1>things i like</h1>
+            
+            <div class="things-category">
+                <h2>quotes</h2>
+                <ul class="things-list">
+                    <li>"Simplicity is the ultimate sophistication." — Leonardo da Vinci</li>
+                    <li>"The obstacle is the way." — Marcus Aurelius</li>
+                    <li>"Design is not just what it looks like and feels like. Design is how it works." — Steve Jobs</li>
+                </ul>
+            </div>
+            
+            <div class="things-category">
+                <h2>books</h2>
+                <ul class="things-list">
+                    <li>Thinking, Fast and Slow — Daniel Kahneman</li>
+                    <li>Sapiens — Yuval Noah Harari</li>
+                    <li>The Design of Everyday Things — Don Norman</li>
+                </ul>
+            </div>
+            
+            <div class="things-category">
+                <h2>principles</h2>
+                <ul class="things-list">
+                    <li>Start small and iterate quickly</li>
+                    <li>Less but better</li>
+                    <li>Learn something new every day</li>
+                </ul>
+            </div>
+            
+            <div class="things-category">
+                <h2>tools</h2>
+                <ul class="things-list">
+                    <li>Notion for organizing ideas and projects</li>
+                    <li>Figma for design work</li>
+                    <li>VSCode for coding</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    
+    <script>
+        // Function to show the selected section
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show the selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-links > li > a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`.nav-links > li > a[href="#${sectionId}"]`).classList.add('active');
+            
+            // On mobile, close the menu after selection
+            if (window.innerWidth <= 768) {
+                document.querySelector('.sidebar').classList.remove('active');
+                document.querySelector('.hamburger-icon').classList.remove('open');
+            }
+        }
+        
+        // Set up dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    // Find the next sibling which should be the dropdown menu
+                    const dropdownMenu = this.nextElementSibling;
+                    
+                    // Toggle the active class
+                    dropdownMenu.classList.toggle('active');
+                });
+            });
+            
+            // Hamburger menu functionality
+            const hamburgerMenu = document.querySelector('.hamburger-menu');
+            hamburgerMenu.addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+                document.querySelector('.hamburger-icon').classList.toggle('open');
+            });
+            
+            // Make the site title navigate to about section
+            document.querySelector('.site-title').addEventListener('click', function() {
+                showSection('about');
+            });
+        });
+    </script>
+</body>
+</html>
