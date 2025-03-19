@@ -233,6 +233,16 @@
             z-index: 200;
             cursor: pointer;
         }
+
+        /* Add this new rule right here */
+        @media (min-width: 769px) {
+        .hamburger-menu,
+        .hamburger-icon {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+         }
+        }
         
         .hamburger-icon {
             width: 30px;
